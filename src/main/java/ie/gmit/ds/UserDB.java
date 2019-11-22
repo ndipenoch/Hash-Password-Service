@@ -32,7 +32,6 @@ public class UserDB {
         users.put(id, user);
     }
 
-
     //Create a user
     public static void createUser(final Integer id, final User user){
         PasswordClient client = new PasswordClient("localhost", 50551);
@@ -70,4 +69,36 @@ public class UserDB {
         }
 
     }
+
+    //login
+    public static boolean login(Integer id, User user){
+        PasswordClient client = new PasswordClient("localhost", 50551);
+        boolean isValid = false;
+        try {
+            //Get user from the database by user ID.
+
+            User u = getUser(id);
+            //Build a validate request to send a validation request
+            ValidateRequest requestValidate = ValidateRequest.newBuilder()
+                    .setHashedPassword(u.getHashPwd())
+                    .setPassword(user.getuPwd())
+                    .setSalt(u.getSalt())
+                    .build();
+
+            //Send a validation request and get response which is a boolean value(Another way of doing it)
+            //isValid = client.syncPassowrdService.validate(requestValidate).getValue();
+
+            //Use method to validate request and get a bool value
+            isValid = client.checkValidation(requestValidate);
+
+            System.out.println("Is Valid "+ isValid);
+        } finally {
+
+        }
+
+        return isValid;
+    }
+
+
+
 }
