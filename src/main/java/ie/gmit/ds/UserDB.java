@@ -21,4 +21,9 @@ public class UserDB {
     public static List<User> getUsers(){
         return new ArrayList<User>(users.values());
     }
+
+    //Get a user by Id
+    public static User getUser(Integer id){
+        return users.get(id);
+    }
 }
