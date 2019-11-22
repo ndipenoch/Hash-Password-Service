@@ -47,8 +47,8 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
 
             String pwd = request.getPassword();
             char[] pwdCharArray = pwd.toCharArray();
-            byte[] salt = Passwords.getNextSalt();
-            byte[] hashedPassword  = Passwords.hash(pwdCharArray,salt);
+            byte[] salt = request.getSalt().toByteArray();
+            byte[] hashedPassword = request.getHashedPassword().toByteArray();
 
             logger.info("Checking the validity of password " );
             boolean validationRequest = Passwords.isExpectedPassword(pwdCharArray,salt,hashedPassword );
