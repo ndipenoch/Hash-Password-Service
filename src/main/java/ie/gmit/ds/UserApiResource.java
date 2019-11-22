@@ -93,4 +93,33 @@ public class UserApiResource {
 
     }
 
+
+    @POST
+    @Path("/login/{id}")
+    public Response login(@PathParam("id") Integer id, User user) throws URISyntaxException {
+        // validation
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        User u = UserDB.getUser(user.getuID());
+        if (violations.size() > 0) {
+            ArrayList<String> validationMessages = new ArrayList<String>();
+            for (ConstraintViolation<User> violation : violations) {
+                validationMessages.add(violation.getPropertyPath().toString() + ": " + violation.getMessage());
+            }
+            return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
+        }
+        if (u != null) {
+            boolean isLogin=false;
+            isLogin=UserDB.login(user.getuID(),user);
+            if(isLogin==true){
+                return Response.ok("You have sucessfully login")
+                        .build();
+            }else{
+                return Response.ok("Password is incorrect")
+                        .build();
+            }
+
+        } else
+            return Response.status(Status.NOT_FOUND).entity(id +" User does not exist.").build();
+    }
+
 }
