@@ -43,4 +43,24 @@ public class UserApiResource {
 
     }
 
+    @POST
+    public Response updateUser(User user) throws URISyntaxException {
+        // validation
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        User u = UserDB.getUser(user.getuID());
+        if (violations.size() > 0) {
+            ArrayList<String> validationMessages = new ArrayList<String>();
+            for (ConstraintViolation<User> violation : violations) {
+                validationMessages.add(violation.getPropertyPath().toString() + ": " + violation.getMessage());
+            }
+            return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
+        }
+        if (u != null) {
+            UserDB.updateUser(user.getuID(),user);
+            return Response.ok("User id "+user.getuID()+" is sucessfully updated")
+                    .build();
+        }else
+            return Response.status(Status.NOT_FOUND).entity("Can not update. User id "+user.getuID()+" does not exist").build();
+    }
+
 }
