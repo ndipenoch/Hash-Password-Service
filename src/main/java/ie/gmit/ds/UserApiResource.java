@@ -122,4 +122,16 @@ public class UserApiResource {
             return Response.status(Status.NOT_FOUND).entity(id +" User does not exist.").build();
     }
 
+    @DELETE
+    @Path("/{id}")
+    public Response removeUserById(@PathParam("id") Integer id) {
+        User user = UserDB.getUser(id);
+        if (user!= null) {
+            UserDB.removeUser(id);
+            return Response.ok("ID "+user.getuID()+" was succesfully deleted.").build();
+        }
+        else
+            return Response.status(Status.NOT_FOUND ).entity(id +" does not exist.").build();
+    }
+
 }
