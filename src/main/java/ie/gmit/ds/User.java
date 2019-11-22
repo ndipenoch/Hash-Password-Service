@@ -95,5 +95,5 @@ public class User {
     public void setSalt(ByteString salt) {
         this.salt = salt;
     }
-    
+
 }
