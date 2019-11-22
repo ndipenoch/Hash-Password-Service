@@ -24,5 +24,10 @@ public class UserApiResource {
     public UserApiResource(Validator validator) {
         this.validator = validator;
     }
+
+    @GET
+    public Response getUsers() {
+        return Response.ok(UserDB.getUsers()).build();
+    }
     
 }
