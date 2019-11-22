@@ -12,10 +12,6 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
             Logger.getLogger(PasswordServiceImpl.class.getName());
 
 
-    byte[] salt_2;
-    byte[] hashedPassword_2;
-
-
     @Override
     public void hash(HashRequest request, StreamObserver<HashResponse> responseObserver) {
 
