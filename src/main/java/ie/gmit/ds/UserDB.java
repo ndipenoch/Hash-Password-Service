@@ -16,4 +16,9 @@ public class UserDB {
         users.put(1, new User(1, "Mark", "mark@gmit.ie"));
         users.put(2, new User(2, "James",  "james@gmail.com"));
     }
+
+    //List all users
+    public static List<User> getUsers(){
+        return new ArrayList<User>(users.values());
+    }
 }
