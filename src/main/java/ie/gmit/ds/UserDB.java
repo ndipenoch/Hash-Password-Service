@@ -91,7 +91,6 @@ public class UserDB {
             //Use method to validate request and get a bool value
             isValid = client.checkValidation(requestValidate);
 
-            System.out.println("Is Valid "+ isValid);
         } finally {
 
         }
@@ -100,5 +99,8 @@ public class UserDB {
     }
 
 
-
+    //Delete a user
+    public static void removeUser(Integer id){
+        users.remove(id);
+    }
 }
