@@ -16,94 +16,43 @@ public class PasswordClient {
     private static final Logger logger =
             Logger.getLogger(PasswordClient.class.getName());
     private final ManagedChannel channel;
-    // private final PasswordServiceGrpc.PasswordServiceStub asyncPasswordService;
+    private final PasswordServiceGrpc.PasswordServiceStub asyncPasswordService;
     private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPassowrdService;
 
+    //Connect to the server with a socket(IP and port number).
     public PasswordClient(String host, int port) {
         channel = ManagedChannelBuilder
                 .forAddress(host, port)
                 .usePlaintext()
                 .build();
-        // asyncPasswordService = PasswordServiceGrpc.newBlockingStub(channel);
+        asyncPasswordService = PasswordServiceGrpc.newStub(channel);
         syncPassowrdService = PasswordServiceGrpc.newBlockingStub(channel);
     }
-
+    //Shutdown the server if interupted.
     public void shutdown() throws InterruptedException {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public HashResponse hashUserpwd(HashRequest newHashRequest) {
-        logger.info("Adding new password" + newHashRequest);
-        HashResponse result = null;
-        //ResponseHash result = BoolValue.newBuilder().setValue(false).build();
+    //Make asychronous hash request call to the server
+    public void hashUserpwd(HashRequest newHashRequest, StreamObserver<HashResponse> callback) {
         try {
-            result = syncPassowrdService.hash(newHashRequest);
-            logger.info("Good password " + result.getHashedPassword());
-            //logger.info("Back from the Salt" + result.getSalt());
-            //logger.info("Back from the UserId" + result.getUserId());
+            asyncPasswordService.hash(newHashRequest, callback);
         } catch (StatusRuntimeException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
-            return result;
         }
-        if (result !=null) {
-            logger.info("Successfully added " + newHashRequest);
-        } else {
-            logger.warning("Failed to add ");
-        }
-
-        return result;
     }
 
-    private boolean checkValidation(ValidateRequest requestValidate) {
-
+    //Make a sychronous validation request to the server and return a boolean response
+    public boolean checkValidation(ValidateRequest requestValidate) {
         boolean validationResponse = false;
-
         try {
-            logger.info("Requesting all items ");
-
             validationResponse = syncPassowrdService.validate(requestValidate).getValue();
-            logger.info("Returned from requesting all items ");
             return validationResponse;
         } catch (
                 StatusRuntimeException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
         }
-
         return validationResponse;
     }
 
-    public static void main(String[] args) throws Exception {
-        PasswordClient client = new PasswordClient("localhost", 50551);
-        String password = "hello";
-        HashRequest newDetails = HashRequest.newBuilder()
-                .setUserId(007)
-                .setPassword(password)
-                .build();
-        boolean isValid = false;
-        try {
-            //Sent request to hash password and get a response
-            HashResponse responseHash = client.hashUserpwd(newDetails);
-
-            //Build a validate request to send a validation request
-            ValidateRequest requestValidate = ValidateRequest.newBuilder()
-                    .setHashedPassword(responseHash.getHashedPassword())
-                    .setPassword(password)
-                    .setSalt(responseHash.getSalt())
-                    .build();
-
-            //Send a validation request and get response which is a boolean value(Another way of doing it)
-            //isValid = client.syncPassowrdService.validate(requestValidate).getValue();
-
-            //Use method to validate request and get a bool value
-            isValid = client.checkValidation(requestValidate);
-
-            System.out.println("Is Valid "+ isValid);
-            //System.out.println("We got back Hash Password"+ responseHash.getHashedPassword() );
-            //System.out.println("We got back Hash salt"+ responseHash.getSalt());
-            // client.getItems();
-        } finally {
-            // Don't stop process, keep alive to receive async response
-            Thread.currentThread().join();
-        }
-    }
 }
