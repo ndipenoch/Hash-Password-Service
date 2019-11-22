@@ -63,4 +63,34 @@ public class UserApiResource {
             return Response.status(Status.NOT_FOUND).entity("Can not update. User id "+user.getuID()+" does not exist").build();
     }
 
+    @PUT
+    @Path("/{id}")
+    public Response createUserById(@PathParam("id") Integer id, User user) {
+        // validation
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        if(user.getuID().equals(id)){
+            //Get user from the database
+            User u = UserDB.getUser(user.getuID());
+            if (violations.size() > 0) {
+                ArrayList<String> validationMessages = new ArrayList<String>();
+                for (ConstraintViolation<User> violation : violations) {
+                    validationMessages.add(violation.getPropertyPath().toString() + ": " + violation.getMessage());
+                }
+                return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
+            }
+            //check if the Id is not taken
+            //and create a new user
+            if (u == null) {
+                user.setuID(id);
+                UserDB.createUser(id, user);
+                return Response.ok("User Succesfully Created").build();
+            }else
+                return Response.status(Status.NOT_FOUND).entity("User exist already").build();
+        } //end of if (u == null)
+        else{
+            return Response.ok("The User ID " +id +" in the URL must be the same like the user ID " + user.getuID() +" in the Body").build();
+        }
+
+    }
+
 }
