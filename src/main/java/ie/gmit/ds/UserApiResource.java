@@ -29,5 +29,18 @@ public class UserApiResource {
     public Response getUsers() {
         return Response.ok(UserDB.getUsers()).build();
     }
-    
+
+    @GET
+    @Path("/{id}")
+    public Response getUserById(@PathParam("id") Integer id) {
+        User user = UserDB.getUser(id);
+        if (user != null) {
+            return Response.ok(user).build();
+        }
+        else{
+            return Response.status(Status.NOT_FOUND).entity(id + " does not exsit.").build();
+        }
+
+    }
+
 }
