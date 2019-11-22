@@ -27,9 +27,9 @@ public class User {
     public User(){
     }
 
-    public User(Integer id, String uName, String uEmail,ByteString hashedPwd, ByteString salt) {
+    public User(Integer id, String uname, String uEmail,ByteString hashedPwd, ByteString salt) {
         this.uID = id;
-        this.uName = uName;
+        this.uName = uname;
         this.uEmail = uEmail;
         this.hashedPwd = hashedPwd;
         this.salt = salt;
@@ -43,40 +43,40 @@ public class User {
 
     @XmlElement
     @JsonProperty
-    public Integer getuID() {
+    public Integer getUid() {
         return uID;
     }
 
-    public void setuID(Integer id) {
+    public void setUid(Integer id) {
         this.uID = id;
     }
 
     @XmlElement
     @JsonProperty
-    public String getuName() {
+    public String getUName() {
         return uName;
     }
 
-    public void setuName(String UName) {
-        this.uName = uName;
+    public void setUName(String UName) {
+        this.uName = UName;
     }
     @XmlElement
     @JsonProperty
-    public String getuPwd() {
+    public String getUPwd() {
         return uPwd;
     }
 
-    public void setuPwd(String pwd) {
+    public void setUPwd(String pwd) {
         this.uPwd = pwd;
     }
 
     @XmlElement
     @JsonProperty
-    public String getuEmail() {
+    public String getUEmail() {
         return uEmail;
     }
 
-    public void setuEmail(String uEmail) {
+    public void setUEmail(String uEmail) {
         this.uEmail = uEmail;
     }
 
@@ -95,5 +95,6 @@ public class User {
     public void setSalt(ByteString salt) {
         this.salt = salt;
     }
+
 
 }

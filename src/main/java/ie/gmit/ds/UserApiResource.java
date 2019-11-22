@@ -35,6 +35,9 @@ public class UserApiResource {
     public Response getUserById(@PathParam("id") Integer id) {
         User user = UserDB.getUser(id);
         if (user != null) {
+            /*return Response.ok("Id: " + " " + user.getUid() + ", Name: " + user.getUName() +
+                    ", Email " + user.getUEmail() + ", Salt: " + user.getSalt() + ", Hash Password: "
+                    + user.getHashPwd()).build();*/
             return Response.ok(user).build();
         }
         else{
@@ -47,7 +50,7 @@ public class UserApiResource {
     public Response updateUser(User user) throws URISyntaxException {
         // validation
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-        User u = UserDB.getUser(user.getuID());
+        User u = UserDB.getUser(user.getUid());
         if (violations.size() > 0) {
             ArrayList<String> validationMessages = new ArrayList<String>();
             for (ConstraintViolation<User> violation : violations) {
@@ -56,21 +59,22 @@ public class UserApiResource {
             return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
         }
         if (u != null) {
-            UserDB.updateUser(user.getuID(),user);
-            return Response.ok("User id "+user.getuID()+" is sucessfully updated")
+            UserDB.updateUser(user.getUid(),user);
+            return Response.ok("User id "+user.getUid()+" is sucessfully updated")
                     .build();
         }else
-            return Response.status(Status.NOT_FOUND).entity("Can not update. User id "+user.getuID()+" does not exist").build();
+            return Response.status(Status.NOT_FOUND).entity("Can not update. User id "+user.getUid()+" does not exist").build();
     }
+
 
     @PUT
     @Path("/{id}")
     public Response createUserById(@PathParam("id") Integer id, User user) {
         // validation
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-        if(user.getuID().equals(id)){
+        if(user.getUid().equals(id)){
             //Get user from the database
-            User u = UserDB.getUser(user.getuID());
+            User u = UserDB.getUser(user.getUid());
             if (violations.size() > 0) {
                 ArrayList<String> validationMessages = new ArrayList<String>();
                 for (ConstraintViolation<User> violation : violations) {
@@ -81,25 +85,24 @@ public class UserApiResource {
             //check if the Id is not taken
             //and create a new user
             if (u == null) {
-                user.setuID(id);
+                user.setUid(id);
                 UserDB.createUser(id, user);
                 return Response.ok("User Succesfully Created").build();
             }else
                 return Response.status(Status.NOT_FOUND).entity("User exist already").build();
         } //end of if (u == null)
         else{
-            return Response.ok("The User ID " +id +" in the URL must be the same like the user ID " + user.getuID() +" in the Body").build();
+            return Response.ok("The User ID " +id +" in the URL must be the same like the user ID " + user.getUid() +" in the Body").build();
         }
 
     }
-
 
     @POST
     @Path("/login/{id}")
     public Response login(@PathParam("id") Integer id, User user) throws URISyntaxException {
         // validation
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-        User u = UserDB.getUser(user.getuID());
+        User u = UserDB.getUser(user.getUid());
         if (violations.size() > 0) {
             ArrayList<String> validationMessages = new ArrayList<String>();
             for (ConstraintViolation<User> violation : violations) {
@@ -109,12 +112,12 @@ public class UserApiResource {
         }
         if (u != null) {
             boolean isLogin=false;
-            isLogin=UserDB.login(user.getuID(),user);
+            isLogin=UserDB.login(user.getUid(),user);
             if(isLogin==true){
-                return Response.ok("You have sucessfully login")
+                return Response.ok(" You are sucessfully login")
                         .build();
             }else{
-                return Response.ok("Password is incorrect")
+                return Response.ok(" Password is incorrect")
                         .build();
             }
 
@@ -122,16 +125,16 @@ public class UserApiResource {
             return Response.status(Status.NOT_FOUND).entity(id +" User does not exist.").build();
     }
 
+
     @DELETE
     @Path("/{id}")
     public Response removeUserById(@PathParam("id") Integer id) {
         User user = UserDB.getUser(id);
         if (user!= null) {
             UserDB.removeUser(id);
-            return Response.ok("ID "+user.getuID()+" was succesfully deleted.").build();
+            return Response.ok("ID "+user.getUid()+" was succesfully deleted.").build();
         }
         else
             return Response.status(Status.NOT_FOUND ).entity(id +" does not exist.").build();
     }
-
 }

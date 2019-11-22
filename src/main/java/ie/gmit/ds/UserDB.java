@@ -13,8 +13,7 @@ public class UserDB {
     public final static HashMap<Integer, User> users = new HashMap<>();
     static{
         //Test data
-        users.put(1, new User(1, "Mark", "mark@gmit.ie"));
-        users.put(2, new User(2, "James",  "james@gmail.com"));
+       // users.put(1, new User(1, "Mark", "mark@gmit.ie"));
     }
 
     //List all users
@@ -38,7 +37,7 @@ public class UserDB {
 
         HashRequest hashedUerDetails = HashRequest.newBuilder()
                 .setUserId(id)
-                .setPassword(user.getuPwd())
+                .setPassword(user.getUPwd())
                 .build();
         try {
             //Sent request  an to hash password with a callback function
@@ -47,7 +46,7 @@ public class UserDB {
                 //Create new user
                 @Override
                 public void onNext(HashResponse value) {
-                    newUser = new User(user.getuID(), user.getuName(), user.getuEmail(), value.getHashedPassword(), value.getSalt());
+                    newUser = new User(user.getUid(), user.getUName(), user.getUEmail(), value.getHashedPassword(), value.getSalt());
                 }
 
                 @Override
@@ -81,7 +80,7 @@ public class UserDB {
             //Build a validate request to send a validation request
             ValidateRequest requestValidate = ValidateRequest.newBuilder()
                     .setHashedPassword(u.getHashPwd())
-                    .setPassword(user.getuPwd())
+                    .setPassword(user.getUPwd())
                     .setSalt(u.getSalt())
                     .build();
 
@@ -98,9 +97,9 @@ public class UserDB {
         return isValid;
     }
 
-
     //Delete a user
     public static void removeUser(Integer id){
         users.remove(id);
     }
+
 }
