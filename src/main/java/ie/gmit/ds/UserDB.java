@@ -27,8 +27,44 @@ public class UserDB {
     }
 
     //Update a user
-    public static void updateUser(Integer id, User user){
+   /* public static void updateUser(Integer id, User user){
         users.put(id, user);
+    }*/
+    public static void updateUser(final Integer id, final User user){
+        PasswordClient client = new PasswordClient("localhost", 50551);
+
+        HashRequest hashedUerDetails = HashRequest.newBuilder()
+                .setUserId(id)
+                .setPassword(user.getUPwd())
+                .build();
+        try {
+            //Sent request  an to hash password with a callback function
+            StreamObserver<HashResponse>  callback = new StreamObserver<HashResponse>() {
+                User newUser;
+                //Update new user
+                @Override
+                public void onNext(HashResponse value) {
+                    newUser = new User(user.getUid(), user.getUName(), user.getUEmail(), value.getHashedPassword(), value.getSalt());
+                }
+
+                @Override
+                public void onError(Throwable t) {
+
+                }
+
+                //save the user to the database
+                @Override
+                public void onCompleted() {
+                    users.put(id, newUser);
+                }
+            };
+
+            client.hashUserpwd(hashedUerDetails, callback);
+
+        } finally {
+
+        }
+
     }
 
     //Create a user

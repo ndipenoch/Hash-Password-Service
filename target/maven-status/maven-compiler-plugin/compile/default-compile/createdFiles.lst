@@ -10,6 +10,7 @@ ie\gmit\ds\HashResponseOrBuilder.class
 ie\gmit\ds\PasswordServiceGrpc$PasswordServiceBlockingStub.class
 ie\gmit\ds\PasswordServiceGrpc.class
 ie\gmit\ds\PasswordServiceGrpc$PasswordServiceFileDescriptorSupplier.class
+ie\gmit\ds\UserDB$2.class
 ie\gmit\ds\ValidateRequest.class
 ie\gmit\ds\ValidateRequestOrBuilder.class
 ie\gmit\ds\HashRequestOrBuilder.class
