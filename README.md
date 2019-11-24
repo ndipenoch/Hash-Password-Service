@@ -3,6 +3,10 @@ Hash Password Service
 
 Command to run the jar of part 1 in cmd: java -jar passwordservice.jar
 
+Command to run the jar of part 2 in cmd: java -jar grpc-test-1.0-SNAPSHOT.jar server UserApiConfig.yaml
+
+PS: To run part 2, the jar and UserApiConfig.yaml file must be in the same folder
+
 GitHub Link: https://github.com/ndipenoch/Hash-Password-Service.git
 
 I made test data to test the validation method in the PasswordServiceImpl in part 1 and forgot to take it off and submitted it with this data.

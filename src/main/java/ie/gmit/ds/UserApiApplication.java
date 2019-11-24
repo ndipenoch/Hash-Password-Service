@@ -14,7 +14,7 @@ public class UserApiApplication extends Application<UserApiConfig> {
         final UserApiResource resource = new UserApiResource(e.getValidator());
 
         final UserApiHealthCheck healthCheck = new UserApiHealthCheck();
-        e.healthChecks().register("example", healthCheck);
+        e.healthChecks().register("Health checking", healthCheck);
         e.jersey().register(resource);
     }
 }

@@ -26,13 +26,10 @@ public class UserDB {
         return users.get(id);
     }
 
-    //Update a user
-   /* public static void updateUser(Integer id, User user){
-        users.put(id, user);
-    }*/
     public static void updateUser(final Integer id, final User user){
         PasswordClient client = new PasswordClient("localhost", 50551);
 
+        //hashed the new details
         HashRequest hashedUerDetails = HashRequest.newBuilder()
                 .setUserId(id)
                 .setPassword(user.getUPwd())
@@ -52,7 +49,7 @@ public class UserDB {
 
                 }
 
-                //save the user to the database
+                //save the new user to the database
                 @Override
                 public void onCompleted() {
                     users.put(id, newUser);
@@ -71,6 +68,7 @@ public class UserDB {
     public static void createUser(final Integer id, final User user){
         PasswordClient client = new PasswordClient("localhost", 50551);
 
+        //hash user details
         HashRequest hashedUerDetails = HashRequest.newBuilder()
                 .setUserId(id)
                 .setPassword(user.getUPwd())
@@ -111,7 +109,6 @@ public class UserDB {
         boolean isValid = false;
         try {
             //Get user from the database by user ID.
-
             User u = getUser(id);
             //Build a validate request to send a validation request
             ValidateRequest requestValidate = ValidateRequest.newBuilder()
@@ -123,7 +120,7 @@ public class UserDB {
             //Send a validation request and get response which is a boolean value(Another way of doing it)
             //isValid = client.syncPassowrdService.validate(requestValidate).getValue();
 
-            //Use method to validate request and get a bool value
+            //Send a validation request and get response which is a boolean  value
             isValid = client.checkValidation(requestValidate);
 
         } finally {
