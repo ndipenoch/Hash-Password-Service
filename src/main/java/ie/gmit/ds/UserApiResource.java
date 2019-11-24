@@ -35,9 +35,6 @@ public class UserApiResource {
     public Response getUserById(@PathParam("id") Integer id) {
         User user = UserDB.getUser(id);
         if (user != null) {
-            /*return Response.ok("Id: " + " " + user.getUid() + ", Name: " + user.getUName() +
-                    ", Email " + user.getUEmail() + ", Salt: " + user.getSalt() + ", Hash Password: "
-                    + user.getHashPwd()).build();*/
             return Response.ok(user).build();
         }
         else{
@@ -98,8 +95,8 @@ public class UserApiResource {
     }
 
     @POST
-    @Path("/login/{id}")
-    public Response login(@PathParam("id") Integer id, User user) throws URISyntaxException {
+    @Path("/login")
+    public Response login(User user) throws URISyntaxException {
         // validation
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         User u = UserDB.getUser(user.getUid());
@@ -122,7 +119,7 @@ public class UserApiResource {
             }
 
         } else
-            return Response.status(Status.NOT_FOUND).entity(id +" User does not exist.").build();
+            return Response.status(Status.NOT_FOUND).entity(user.getUid() +" User does not exist.").build();
     }
 
 
